@@ -1,34 +1,15 @@
 const express = require("express");
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const keys = require('./config/keys')
+const mongoose = require('mongoose');
+
+require('./services/passport');
+
+mongoose.connect();
+
 const app = express();
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: keys.googleClientID,
-      clientSecret: keys.googleClientSecret,
-      callbackURL: '/auth/google/callback'
-    }, 
-    accessToken => {
-      console.log(accessToken);
-    }
-  )
-);
+//call the function with app parameter
+require('./routes/authRoutes')(app);
 
-//identifier 'google' is a internal identifier of google, so we don't need to specify it elsewhere
-app.get(
-  '/auth/google', 
-  passport.authenticate('google', {
-    scope: ['profile', 'email']
-  })
-);
-
-app.get(
-  '/auth/google/callback', 
-  passport.authenticate('google')//passport will see the code inside the URL
-);//with the name google, use the strategy above 'GoogleStrategy'
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT);
