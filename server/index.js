@@ -1,36 +1,36 @@
-const express = require("express");
-const mongoose = require('mongoose');
-const cookieSession = require('cookie-session');
-const passport = require('passport');
-const keys = require('./config/keys');
-require('./models/User');
-require('./services/passport');
+// index.js - starting point of the server
 
-mongoose.connect(keys.mongoURI);
+const express = require('express'); // CommonJS modules
+// const mongoose = require('mongoose');
+// const cookieSession = require('cookie-session');
+// const passport = require('passport');
+// const keys = require('./config/keys');
+// require('./models/User');
+// require('./services/passport');
 
-const app = express();
+// mongoose.connect(keys.mongoURI);
 
-app.use(
-  cookieSession({
-    maxAge: 30 * 24* 60 * 60 * 1000,
-    keys: [keys.cookieKey]
-  })
-);
+// app object is used to set up configuration 
+// that listens for incoming requests 
+// that are being routed to different route handlers
+const app = express(); 
 
-app.use(passport.initialize());
-app.use(passport.session());  
+// 
+app.get('/', (req, res) => {
+  res.send({ hi: 'there' });
+});
 
-//call the function with app parameter
-require('./routes/authRoutes')(app);
+// app.use(
+//   cookieSession({
+//     maxAge: 30 * 24 * 60 * 60 * 1000,
+//     keys: [keys.cookieKey]
+//   })
+// );
+// app.use(passport.initialize());
+// app.use(passport.session());
 
+// require('./routes/authRoutes')(app);
 
-const PORT = process.env.PORT || 3000;
+// look at the underlying environment and see if it has a port defined for us - dynamic port binding
+const PORT = process.env.PORT || 5000;
 app.listen(PORT);
-
-
-
-console.log(`Server Running at port ${PORT}  CNTL-C to quit`)
-console.log(`To Test:`)
-console.log(`Open several browsers to: http://localhost:${PORT}`)
-console.log(`Open several browsers to: http://localhost:${PORT}/auth/google`)
-console.log(`Open several browsers to: http://localhost:${PORT}/api/current_user`)
