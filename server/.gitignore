@@ -1,5 +1,4 @@
 node_modules
-.DS_Store
 keys.js
-.gitignore
+.DS_Store
 ../.DS_Store
